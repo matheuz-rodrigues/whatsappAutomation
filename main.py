@@ -1,6 +1,7 @@
 import requests
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QShortcut
+from PyQt5.QtGui import QKeySequence
 from telaLogin import Ui_Form  # Importando o código gerado
 
 #cria a sessão
@@ -49,26 +50,29 @@ def terminar_tudo():
 '''
 
 
-
 class TelaLogin(QWidget, Ui_Form):
     def __init__(self):
         super().__init__()
-        self.setupUi(self)  # Configura a interface
-        # Adicionar funcionalidades, como conectar o botão a um método
-        self.pushButton.clicked.connect(self.entrar)
+        self.setupUi(self)
+        self.btnEntrar.clicked.connect(self.entrar)
+        shortcut = QShortcut(QKeySequence("Return"), self)
+        shortcut.activated.connect(self.btnEntrar.click)
+
 
     def entrar(self):
-        chave = self.lineEdit.text()  # Obtendo o texto do campo 'chave'
-        sessao = self.lineEdit_2.text()  # Obtendo o texto do campo 'ID da Sessão'
 
-        # Aqui você pode adicionar o código para validar os dados
-        print(f"Chave: {chave}, Sessão: {sessao}")
 
-        # Por exemplo, você pode verificar se a chave está vazia e mostrar um erro
-        if not chave or not sessao:
-            print("Por favor, preencha todos os campos.")
-        else:
-            print("Dados validados com sucesso!")
+        api_key = self.inputApiKey.text()
+        session_id = self.inputId.text()
+        if api_key == "6789" and session_id == "dig":
+            #puxa a outra a tela do qr code
+            pass
+        elif api_key != "6789" and session_id == "dig":
+            self.status.setText("Id da sessão Incorreto")
+        elif api_key == "6789" and session_id != "producao":
+            self.status.setText("Chave Incorreta")
+        else: self.status.setText("Dados Inválidos")
+
 
 
 if __name__ == '__main__':
