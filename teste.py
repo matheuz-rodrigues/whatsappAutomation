@@ -1,51 +1,54 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QLineEdit, QShortcut
-from PyQt5.QtGui import QKeySequence
+import requests
+
+def terminate_all_sessions():
+    url = "https://whatsapp-api-8i0o.onrender.com/session/terminateAll"
+    headers = {
+        "accept": "application/json",
+        "x-api-key": "6789",
+    }
+    response = requests.get(url, headers=headers)
+    return print(response.json())
+def start_session():
+    url = f"https://whatsapp-api-8i0o.onrender.com/session/start/{input('Enter Session ID: ')}"
+    headers = {
+        "accept": "application/json",
+        "x-api-key": "6789",
+    }
+    response = requests.get(url, headers=headers)
+    return print(response.json())
+
+def get_qr_image():
+    session_name = input("Enter session name: ")
+    url = f"https://whatsapp-api-8i0o.onrender.com/session/qr/{session_name}/image"
+    headers = {
+        "accept": "image/png",
+        "x-api-key": "6789",
+    }
+    response = requests.get(url, headers=headers)
+
+    # Verifica o tipo de conteúdo retornado
+    content_type = response.headers.get("Content-Type", "")
+    if "image/png" in content_type:
+        return {"image": response.content}
+    else:
+        return {"json": response.json()}
 
 
-# Atalho para o botão
+result = get_qr_image()
+
+if "image" in result:
+    with open("qr_image.png", "wb") as file:
+        file.write(result["image"])
+    print("QR code salvo como 'qr_image.png'")
+elif "json" in result:
+    print("Resposta JSON:", result["json"])
 
 
-
-
-class MainWindow(QMainWindow):
-    def __init__(self):
-
-
-        super().__init__()
-
-        self.setWindowTitle("Exemplo - Enter ativa botão")
-        self.setGeometry(200, 200, 300, 200)
-
-        # Campo de texto
-        self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("Digite algo e pressione Enter...")
-
-        # Botão
-        self.button = QPushButton("Clique-me")
-        self.button.clicked.connect(self.button_clicked)
-
-        # Configurar botão como padrão
-        self.button.setDefault(True)
-
-
-
-        # Layout
-        layout = QVBoxLayout()
-        layout.addWidget(self.input_field)
-        layout.addWidget(self.button)
-
-        # Widget central
-        central_widget = QWidget()
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
-
-    def button_clicked(self):
-        print(f"Texto digitado: {self.input_field.text()}")
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+def get_session_status():
+    url = f"https://whatsapp-api-8i0o.onrender.com/session/status/{input("Digite o nome da sessão: ")}"
+    headers = {
+        "accept": "application/json",
+        "x-api-key": "6789",
+    }
+    response = requests.get(url, headers=headers)
+    return print(response.json())

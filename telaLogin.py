@@ -9,8 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QShortcut
-from PyQt5.QtGui import QKeySequence
+
 
 
 class Ui_Form(object):
@@ -109,7 +108,7 @@ class Ui_Form(object):
         self.inputId.setPlaceholderText(_translate("Form", " Insira o ID"))
         self.label.setText(_translate("Form", "LOGIN"))
         self.btnEntrar.setText(_translate("Form", "ENTRAR"))
-        self.status.setText(_translate("Form", "Status"))
+        #self.status.setText(_translate("Form", "Status"))
 
 
 if __name__ == "__main__":
